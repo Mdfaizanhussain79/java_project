@@ -1,0 +1,205 @@
+import java.util.*;
+import java.util.ArrayList;
+// Book class
+class Book {
+    private String title;
+    private String author;
+    private boolean isBorrowed;
+
+    public Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+        this.isBorrowed = false;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public boolean isBorrowed() {
+        return isBorrowed;
+    }
+
+    public void borrowBook() {
+        isBorrowed = true;
+    }
+
+    public void returnBook() {
+        isBorrowed = false;
+    }
+
+    @Override
+    public String toString() {
+        return title + " by " + author + (isBorrowed ? " (Borrowed)" : " (Available)");
+    }
+}
+
+// User class
+class User {
+    private String name;
+    private int userId;
+
+    public User(String name, int userId) {
+        this.name = name;
+        this.userId = userId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    @Override
+    public String toString() {
+        return "User ID: " + userId + ", Name: " + name;
+    }
+}
+
+// Library class
+
+class Library {
+    private ArrayList<Book> books = new ArrayList<>();
+    private ArrayList<User> users = new ArrayList<>();
+
+    public void addBook(Book book) {
+        books.add(book);
+        System.out.println("Book added: " + book.getTitle());
+    }
+
+    public void registerUser(User user) {
+        users.add(user);
+        System.out.println("User registered: " + user.getName());
+    }
+
+    private User findUserById(int userId) {
+        for (User user : users) {
+            if (user.getUserId() == userId) {
+                return user;
+            }
+        }
+        return null;
+    }
+
+    public void borrowBook(String title, int userId) {
+        User user = findUserById(userId);
+        if (user == null) {
+            System.out.println("User ID not found.");
+            return;
+        }
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title) && !book.isBorrowed()) {
+                book.borrowBook();
+                System.out.println("Book borrowed: " + title + " by User ID: " + userId);
+                return;
+            }
+        }
+        System.out.println("Book not available.");
+    }
+
+    public void returnBook(String title) {
+        for (Book book : books) {
+            if (book.getTitle().equalsIgnoreCase(title) && book.isBorrowed()) {
+                book.returnBook();
+                System.out.println("Book returned: " + title);
+                return;
+            }
+        }
+        System.out.println("Book not found or not borrowed.");
+    }
+
+    public void displayBooks() {
+        System.out.println("\nAvailable Books:");
+        for (Book book : books) {
+            System.out.println(book);
+        }
+    }
+}
+
+// Main class
+
+public class Main {
+    public static void main(String[] args) {
+        Library library = new Library();
+        Scanner sc = new Scanner(System.in);
+
+        // Adding some initial books and users
+        library.addBook(new Book("The Alchemist", "Paulo Coelho"));
+        library.addBook(new Book("1984", "George Orwell"));
+        library.registerUser(new User("Alice", 1));
+        library.registerUser(new User("Bob", 2));
+
+        int choice = -1;
+        while (choice != 0) {
+            System.out.println("\n=== Library Menu ===");
+            System.out.println("1. Add Book");
+            System.out.println("2. Register User");
+            System.out.println("3. Borrow Book");
+            System.out.println("4. Return Book");
+            System.out.println("5. Display Books");
+            System.out.println("0. Exit");
+            System.out.print("Enter choice: ");
+            while (!sc.hasNextInt()) {
+                System.out.print("Invalid input. Enter a number: ");
+                sc.next();
+            }
+            choice = sc.nextInt();
+            sc.nextLine(); // Consume newline
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter book title: ");
+                    String title = sc.nextLine();
+                    System.out.print("Enter author: ");
+                    String author = sc.nextLine();
+                    library.addBook(new Book(title, author));
+                    break;
+                case 2:
+                    System.out.print("Enter user name: ");
+                    String name = sc.nextLine();
+                    System.out.print("Enter user ID: ");
+                    while (!sc.hasNextInt()) {
+                        System.out.print("Invalid input. Enter a number: ");
+                        sc.next();
+                    }
+                    int id = sc.nextInt();
+                    sc.nextLine();
+                    library.registerUser(new User(name, id));
+                    break;
+                case 3:
+                    System.out.print("Enter book title to borrow: ");
+                    String borrowTitle = sc.nextLine();
+                    System.out.print("Enter your user ID: ");
+                    while (!sc.hasNextInt()) {
+                        System.out.print("Invalid input. Enter a number: ");
+                        sc.next();
+                    }
+                    int borrowId = sc.nextInt();
+                    sc.nextLine();
+                    library.borrowBook(borrowTitle, borrowId);
+                    break;
+                case 4:
+                    System.out.print("Enter book title to return: ");
+                    String returnTitle = sc.nextLine();
+                    library.returnBook(returnTitle);
+                    break;
+                case 5:
+                    library.displayBooks();
+                    break;
+                case 0:
+                    System.out.println("Exiting system...");
+                    break;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+
+        sc.close();
+    }
+}
