@@ -1,0 +1,93 @@
+import java.util.Scanner;
+
+// BankAccount class represents a simple bank account with basic operations
+class BankAccount {
+    private String accountHolder; // Name of the account holder
+    private double balance;       // Current balance in the account
+
+    // Constructor to initialize account holder and initial balance
+    public BankAccount(String accountHolder, double initialBalance) {
+        this.accountHolder = accountHolder;
+        this.balance = initialBalance;
+    }
+
+    // Method to deposit money into the account
+    public void deposit(double amount) {
+        if (amount > 0) {
+            balance += amount;
+            System.out.println("Deposited: ₹" + amount);
+        } else {
+            System.out.println("Invalid deposit amount!");
+        }
+    }
+
+    // Method to withdraw money from the account
+    public void withdraw(double amount) {
+        if (amount > 0 && amount <= balance) {
+            balance -= amount;
+            System.out.println("Withdrew: ₹" + amount);
+        } else {
+            System.out.println("Insufficient balance or invalid amount!");
+        }
+    }
+
+    // Method to display the current balance
+    public void checkBalance() {
+        System.out.println("Current Balance: ₹" + balance);
+    }
+
+    // Getter for account holder's name
+    public String getAccountHolder() {
+        return accountHolder;
+    }
+}
+
+// Main class to simulate bank operations
+public class BankSimulation {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Prompt user to create a bank account
+        System.out.print("Enter account holder name: ");
+        String name = sc.nextLine();
+        System.out.print("Enter initial balance: ₹");
+        double balance = sc.nextDouble();
+
+        // Create a new BankAccount object
+        BankAccount account = new BankAccount(name, balance);
+
+        int choice;
+        // Loop to display menu and perform operations until user exits
+        do {
+            System.out.println("\n=== Bank Menu ===");
+            System.out.println("1. Deposit");
+            System.out.println("2. Withdraw");
+            System.out.println("3. Check Balance");
+            System.out.println("4. Exit");
+            System.out.print("Enter choice: ");
+            choice = sc.nextInt();
+
+            // Perform action based on user's choice
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter deposit amount: ₹");
+                    account.deposit(sc.nextDouble());
+                    break;
+                case 2:
+                    System.out.print("Enter withdrawal amount: ₹");
+                    account.withdraw(sc.nextDouble());
+                    break;
+                case 3:
+                    account.checkBalance();
+                    break;
+                case 4:
+                    System.out.println("Exiting... Thank you!");
+                    break;
+                default:
+                    System.out.println("Invalid choice! Try again.");
+            }
+        } while (choice != 4);
+
+        sc.close(); // Close the scanner
+    }
+}
