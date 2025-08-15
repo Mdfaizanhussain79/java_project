@@ -1,0 +1,53 @@
+import java.util.*;
+
+class Question {
+    String questionText;
+    String[] options;
+    char correctOption;
+
+    public Question(String questionText, String[] options, char correctOption) {
+        this.questionText = questionText;
+        this.options = options;
+        this.correctOption = correctOption;
+    }
+
+    public boolean isCorrect(char answer) {
+        return Character.toUpperCase(answer) == Character.toUpperCase(correctOption);
+    }
+}
+
+public class OnlineQuizApp {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        List<Question> quiz = new ArrayList<>();
+
+        // Add questions
+        quiz.add(new Question("Which planet is known as the Red Planet?",
+                new String[]{"A. Earth", "B. Mars", "C. Jupiter", "D. Venus"}, 'B'));
+        quiz.add(new Question("Who developed Java?",
+                new String[]{"A. James Gosling", "B. Dennis Ritchie", "C. Bjarne Stroustrup", "D. Guido van Rossum"}, 'A'));
+        quiz.add(new Question("What is the capital of France?",
+                new String[]{"A. Berlin", "B. Rome", "C. Paris", "D. Madrid"}, 'C'));
+
+        int score = 0;
+
+        System.out.println("=== Welcome to the Online Quiz ===");
+        for (int i = 0; i < quiz.size(); i++) {
+            Question q = quiz.get(i);
+            System.out.println("\nQ" + (i + 1) + ": " + q.questionText);
+            for (String option : q.options) {
+                System.out.println(option);
+            }
+            System.out.print("Your answer (A/B/C/D): ");
+            char answer = sc.next().charAt(0);
+
+            if (q.isCorrect(answer)) {
+                score++;
+            }
+        }
+
+        System.out.println("\n=== Quiz Finished ===");
+        System.out.println("Your Score: " + score + "/" + quiz.size());
+        sc.close();
+    }
+}
